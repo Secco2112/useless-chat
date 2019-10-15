@@ -43,13 +43,14 @@
     <![endif]-->
     <!-- Warning Section Ends -->
     <!-- Required Jqurey -->
-    <script src="<?= asset('/js/jquery.min.js'); ?>"></script>
-    <script src="<?= asset('/plugins/jquery-ui/jquery-ui.min.js'); ?>"></script>
-    <script src="<?= asset('/plugins/tether/dist/js/tether.min.js'); ?>"></script>
-    <script src="<?= asset('/plugins/bootstrap/js/bootstrap.min.js'); ?>"></script>
-    <script src="<?= asset('/plugins/Waves/waves.min.js'); ?>"></script>
-    <script type="text/javascript" src="<?= asset('/pages/elements.js'); ?>"></script>
-    <script src="<?= asset('/js/UselessChatWebsocket.js'); ?>"></script>
-    <script src="<?= asset('/js/main.js'); ?>"></script>
+    <script src="<?= asset('/js/jquery.min.js'); ?>" data-turbolinks-track="true"></script>
+    <script src="<?= asset('/plugins/jquery-ui/jquery-ui.min.js'); ?>" data-turbolinks-track="true"></script>
+    <script src="<?= asset('/plugins/tether/dist/js/tether.min.js'); ?>" data-turbolinks-track="true"></script>
+    <script src="<?= asset('/plugins/bootstrap/js/bootstrap.min.js'); ?>" data-turbolinks-track="true"></script>
+    <script src="<?= asset('/plugins/Waves/waves.min.js'); ?>" data-turbolinks-track="true"></script>
+    <script type="text/javascript" src="<?= asset('/pages/elements.js'); ?>" data-turbolinks-track="true"></script>
+    <script src="<?= asset('/js/turbolinks.js'); ?>" data-turbolinks-track="true"></script>
+    <script src="<?= asset('/js/UselessChatWebsocket.js'); ?>" data-turbolinks-track="true"></script>
+    <script src="<?= asset('/js/main.js'); ?>" data-turbolinks-track="true"></script>
     </body>
 </html>

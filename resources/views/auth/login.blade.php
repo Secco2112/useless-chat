@@ -8,10 +8,7 @@
                     <div class="login-card card-block">
                         <form class="md-float-material" method="POST" action="{{ route('login') }}">
                             @csrf
-
-                            <div class="text-center">
-                                <img src="<?= asset('/images/logo-blue.png'); ?>" alt="logo">
-                            </div>
+                            
                             <h3 class="text-center txt-primary">
                                 <?= trans("login.form_signin"); ?>
                             </h3>
@@ -25,17 +22,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6 col-xs-12">
-                                <div class="rkmd-checkbox checkbox-rotate checkbox-ripple m-b-25">
-                                    <label class="input-checkbox checkbox-primary">
-                                        <input type="checkbox" id="checkbox">
-                                        <span class="checkbox"></span>
-                                    </label>
-                                    <div class="captions"><?= trans('login.form_remember'); ?></div>
+                                    <div class="rkmd-checkbox checkbox-rotate checkbox-ripple m-b-25">
+                                        <label class="input-checkbox checkbox-primary">
+                                            <input type="checkbox" id="checkbox">
+                                            <span class="checkbox"></span>
+                                        </label>
+                                        <div class="captions"><?= trans('login.form_remember'); ?></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6 col-xs-12 forgot-phone text-right">
-                                <a href="forgot-password.html" class="text-right f-w-600"> <?= trans('login.form_forgot_pass'); ?></a>
-                            </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-10 offset-xs-1">

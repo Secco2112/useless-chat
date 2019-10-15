@@ -33,6 +33,7 @@
         "gulp-plumber": "^1.2.1",
         "gulp-postcss": "^8.0.0",
         "gulp-pug": "^4.0.1",
-        "gulp-rename": "^1.4.0"
+        "gulp-rename": "^1.4.0",
+        "turbolinks": "^5.2.0"
     }
 }

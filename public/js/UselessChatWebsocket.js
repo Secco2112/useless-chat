@@ -1,6 +1,7 @@
 class UselessChatWebsocket{
     constructor(host="localhost", port="8081") {
         this.messages = [];
+        this.clients = [];
         this.ws = new WebSocket("ws://" + host + ":" + port);
     }
 
@@ -8,23 +9,35 @@ class UselessChatWebsocket{
         var self = this;
 
         this.ws.onopen = function() {
-            console.log('Conectado');
+            
         };
         this.ws.onerror = function() {
-            console.log('Não foi possível conectar-se ao servidor');
+            
         };
         this.ws.onmessage = function(e) {
-            self.messages.push(e.data);
-            console.log(self.messages);
+            var chatId = $("meta[name=current_user_id]").attr("content");
+            var data = JSON.parse(e.data);
+
+            if(data.type == "connect") {
+                self.clients.push({
+                    socketId: data.id,
+                    chatId: chatId
+                });
+            } else if(data.type == "message") {
+                self.messages.push({
+                    message: data.message,
+                    socketId: data.from_id
+                });
+            }
+
+            console.log(self.clients);
         };
     }
 
     sendMessage(message) {
         if (this.ws.readyState !== this.ws.OPEN) {
-            console.log('Problemas na conexão. Tentando reconectar...');
-            this.connect(function() {
-                this.sendMessage();
-            });
+            this.start();
+            this.sendMessage(message);
             return;
         }
 

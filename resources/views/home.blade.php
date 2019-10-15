@@ -9,7 +9,7 @@
                 <div class="chat-content">
                     <div class="header">
                         <span id="at">@</span>
-                        <span id="username">FreakStory</span>
+                        <span id="username"><?= $receiver->name; ?></span>
                         <span id="status"></span>
                     </div>
                     <div class="chat-messages">

@@ -122,6 +122,8 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
+    'iv' => 'secret_chat_iv',
+    'secret_key' => 'secret_chat_key',
 
     /*
     |--------------------------------------------------------------------------
