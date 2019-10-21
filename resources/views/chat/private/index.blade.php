@@ -1,6 +1,8 @@
 @include('layouts/header')
 
     <body>
+        <meta name="receiver_id" content="<?= $receiver->id; ?>">
+
         <main class="main-content">
             <div class="left-content">
                 

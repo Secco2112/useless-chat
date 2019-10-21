@@ -21,5 +21,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/user/info', 'UserController@info')->name('user.info');
 
-Route::get('/chat/private/{id}', 'ChatController@index')->name('chat.private');
-Route::post('/chat/private_save', 'ChatController@private_save')->name('chat.private_save');
+Route::get('/chat/private/{id}', 'PrivateChatController@index')->name('chat.private');
+Route::post('/chat/private/save', 'PrivateChatController@save')->name('chat.private_save');

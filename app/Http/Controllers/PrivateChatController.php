@@ -7,7 +7,7 @@ use ChatCodify;
 use Auth;
 use \App\PrivateMessage;
 
-class ChatController extends Controller
+class PrivateChatController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -130,7 +130,7 @@ class ChatController extends Controller
         //
     }
 
-    public function private_save() {
+    public function save() {
         if(!empty($_POST)) {
             $sender_id = $_POST["sender"];
             $receiver_id = $_POST["receiver"];
@@ -138,7 +138,7 @@ class ChatController extends Controller
 
             $data = new PrivateMessage();
             $data->sender_id = $sender_id;
-            $data->receiver_id = ChatCodify::decrypt($receiver_id);
+            $data->receiver_id = $receiver_id;
             $data->content = $message;
             $data->save();
 

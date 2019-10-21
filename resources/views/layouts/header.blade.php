@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Useless Chat</title>
+        <title>URI Chat</title>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -29,6 +29,9 @@
         <?php
             if(\Auth::check()) { ?>
                 <meta name="current_user_id" content="<?= Auth::user()->id; ?>">
+                <meta name="current_username" content="<?= Auth::user()->name; ?>">
+                <meta name="current_user_mail" content="<?= Auth::user()->email; ?>">
+                <meta name="current_user_photo" content="<?= "https://www.gravatar.com/avatar/" . md5(strtolower(Auth::user()->email)); ?>">
             <?php }
         ?>
 
