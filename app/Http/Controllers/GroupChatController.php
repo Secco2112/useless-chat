@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use ChatCodify;
+use \App\GroupChat;
+use \App\GroupChatMessages;
 use MessageDelete;
-use Auth;
-use \App\PrivateMessage;
 
-class PrivateChatController extends Controller
+class GroupChatController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,25 +20,20 @@ class PrivateChatController extends Controller
         $delete_handler = new MessageDelete();
         $delete_handler->init();
 
-        $user_id = Auth::user()->id;
-        $other_user_id = ChatCodify::decrypt($id);
+        $receivers = [];
+        $users = GroupChat::find($id)->users();
+        $receivers = array_map(function($u) {
+            return $u["id"];
+        }, $users);
 
-        if($user_id == $other_user_id) {
-            return redirect('/');
+        $group_name = "";
+        foreach ($users as $key => $user) {
+            if(count($users) - 1 == $key) $group_name .= " e " . $user["name"];
+            else if($key == 0) $group_name .= $user["name"];
+            else $group_name .= ", " . $user["name"];
         }
 
-        $sender = \App\User::find($user_id);
-        $receiver = \App\User::find($other_user_id);
-        
-        $data = new PrivateMessage();
-        $data = $data->where(function($query) use ($user_id, $other_user_id) {
-            $query->where('sender_id', '=', $user_id);
-            $query->where('receiver_id', '=', $other_user_id);
-        })->orWhere(function($query) use ($user_id, $other_user_id) {
-            $query->where('sender_id', '=', $other_user_id);
-            $query->where('receiver_id', '=', $user_id);
-        })->orderBy("created_at", "ASC")->get();
-
+        $data = GroupChatMessages::where("group_id", $id)->orderBy("created_at", "ASC")->get();
 
         $messages = [];
         $i = 0;
@@ -48,25 +42,31 @@ class PrivateChatController extends Controller
             $f = false;
             $messages[$it][] = $data[$i];
 
-            while($i < count($data) - 1 && $data[$i]->sender_id == $data[$i+1]->sender_id) {
+            while($i < count($data) - 1 && $data[$i]->user_id == $data[$i+1]->user_id) {
                 $messages[$it][] = $data[$i+1];
                 $i++;
                 $f = true;
             }
 
             $i++;
-            #if(!$f) $i++;
             $it++;
         }
-        
+
+        foreach ($messages as $i => $group) {
+            foreach ($group as $j => &$message) {
+                $user = \App\User::find($message->user_id);
+                $message->username = $user->name;
+                $message->email = $user->email;
+            }
+        }
 
         $data = [
-            "sender" => $sender,
-            "receiver" => $receiver,
-            "messages" => $messages
+            "group_id" => $id,
+            "receivers" => $receivers,
+            "messages" => $messages,
+            "group_name" => $group_name
         ];
-
-        return view('chat.private.index')->with($data);
+        return view('chat.group.index')->with($data);
     }
 
     /**
@@ -136,18 +136,16 @@ class PrivateChatController extends Controller
     }
 
     public function save() {
-        if(!empty($_POST)) {
-            $sender_id = $_POST["sender"];
-            $receiver_id = $_POST["receiver"];
-            $message = $_POST["message"];
+        $sender = $_POST["sender"];
+        $group_id = $_POST["group_id"];
+        $message = $_POST["message"];
 
-            $data = new PrivateMessage();
-            $data->sender_id = $sender_id;
-            $data->receiver_id = $receiver_id;
-            $data->content = $message;
-            $data->save();
+        $data = new GroupChatMessages();
+        $data->group_id = $group_id;
+        $data->user_id = $sender;
+        $data->content = $message;
+        $data->save();
 
-            die();
-        }
+        die();
     }
 }

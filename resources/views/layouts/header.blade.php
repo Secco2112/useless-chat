@@ -19,7 +19,9 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet" data-turbolinks-track="true">
         <link href="<?= asset('/css/font-awesome.min.css'); ?>" rel="stylesheet" type="text/css" data-turbolinks-track="true">
         <link rel="stylesheet" type="text/css" href="<?= asset('/icon/icofont/css/icofont.css'); ?>" data-turbolinks-track="true">
-        <link rel="stylesheet" type="text/css" href="<?= asset('/plugins/bootstrap/css/bootstrap.min.css'); ?>" data-turbolinks-track="true">
+        <!-- <link rel="stylesheet" type="text/css" href="<?= asset('/plugins/bootstrap/css/bootstrap.min.css'); ?>" data-turbolinks-track="true"> -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" integrity="sha256-f6fW47QDm1m01HIep+UjpCpNwLVkBYKd+fhpb4VQ+gE=" crossorigin="anonymous" />
         <link rel="stylesheet" type="text/css" href="<?= asset('/css/main.css'); ?>" data-turbolinks-track="true">
         <link rel="stylesheet" type="text/css" href="<?= asset('/css/responsive.css'); ?>" data-turbolinks-track="true">
         <link rel="stylesheet" type="text/css" href="<?= asset('/css/color/color-1.min.css'); ?>" id="color" data-turbolinks-track="true"/>
