@@ -51,7 +51,13 @@
                     if($delete_time == 0) {
                         $valid = false;
                     } else if($delete_time == 1) {
-                        $delete_type = ($delete_type == "hours"? "hour": "day");
+                        if($delete_type == "hours") {
+                            $delete_type = "hour";
+                        } else if($delete_type == "days") {
+                            $delete_type = "day";
+                        } else if ($delete_type == "minutes") {
+                            $delete_type = "minute";
+                        }
                     }
 
                     $string_modify = "-{$delete_time} {$delete_type}";
@@ -63,7 +69,7 @@
 
                         // Private messages
                         $private_messages = PrivateMessage::where([
-                            ["created_at", "<", $date],
+                            ["created_at", "<=", $date],
                             ["sender_id", "=", $user->id]
                         ])->get();
                         foreach ($private_messages as $key => $message) {

@@ -51,12 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 $users[] = User::find($group_user["user_id"])->toArray();
             }
             
-            $group_name = "";
-            foreach ($users as $key => $user) {
-                if(count($users) - 1 == $key) $group_name .= " e " . $user["name"];
-                else if($key == 0) $group_name .= $user["name"];
-                else $group_name .= ", " . $user["name"];
-            }
+            $group_name = $group->name(25);
 
             $g = $group->toArray();
             $g["name"] = $group_name;
@@ -117,7 +112,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $avatar = "https://www.gravatar.com/avatar/" . md5(strtolower($user->email));
         $handle = ProfileAvatar::where("user_id", $this->id)->get();
         if($handle->count() > 0) {
-            $avatar = Storage::url($handle[0]->path);
+            $avatar = \Storage::url($handle[0]->path);
         }
 
         return $avatar;

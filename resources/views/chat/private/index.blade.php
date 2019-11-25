@@ -8,9 +8,11 @@
             <div class="right-content">
                 <div class="chat-content">
                     <div class="header">
-                        <span id="at">@</span>
-                        <span id="username"><?= $receiver->name; ?></span>
-                        <span id="status"></span>
+                        <div class="info">
+                            <span id="at">@</span>
+                            <span id="username"><?= $receiver->name; ?></span>
+                            <span id="status"></span>
+                        </div>
                     </div>
                     <div class="chat-messages">
                         <div class="top">
@@ -22,7 +24,7 @@
                                                 <div class='header'>
                                                     
                                                     <div class="avatar">
-                                                        <img src="<?= "https://www.gravatar.com/avatar/" . md5(strtolower(trim($group[0]->sender()->email))) . "?s=200"; ?>" />
+                                                        <img src="<?= \App\User::find($group[0]->sender_id)->getAvatar(); ?>" />
                                                     </div>
                                                     <h2 class="meta-info">
                                                         <span id="username"><?= $group[0]->sender()->name; ?></span>

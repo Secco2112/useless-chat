@@ -9,9 +9,14 @@
             <div class="right-content">
                 <div class="chat-content">
                     <div class="header">
-                        <span id="at">@</span>
-                        <span id="username"><?= $group_name; ?></span>
-                        <span id="status"></span>
+                        <div class="info">
+                            <span id="at">@</span>
+                            <span id="username"><?= $group_name; ?></span>
+                            <span id="status"></span>
+                        </div>
+                        <div class="add-user">
+                            <i class="fa fa-user-plus"></i>
+                        </div>
                     </div>
                     <div class="chat-messages">
                         <div class="top">
@@ -22,7 +27,7 @@
                                             <div>
                                                 <div class='header'>
                                                     <div class="avatar">
-                                                        <img src="<?= "https://www.gravatar.com/avatar/" . md5(strtolower(trim($group[0]->email))) . "?s=200"; ?>" />
+                                                        <img src="<?= \App\User::find($group[0]->user_id)->getAvatar(); ?>" />
                                                     </div>
                                                     <h2 class="meta-info">
                                                         <span id="username"><?= $group[0]->username; ?></span>
@@ -74,6 +79,34 @@
                             <div class="user-info">
                                 <div class="common-groups"></div>
                                 <div class="friends-info"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="group-add-user" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Adicionar usuário
+                    </div>
+                    <div class="modal-body">
+                        <div class="content">
+                            <form id="search-user-to-add">
+                                <input name="group_id" value="<?= $group_id; ?>" type="hidden" />
+
+                                <div clas="form-group">
+                                    <label for="user-input">Procure pelo nome do amigo que deseja adicionar ao grupo:</label>
+                                    <input id="user-input" class="form-control" name="username-input" placeholder="Digite o nome do usuário..." />
+                                </div>
+                            </form>
+                            <div class="wrap-list-users-to-add">
+                                <ul></ul>
                             </div>
                         </div>
                     </div>

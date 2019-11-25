@@ -26,17 +26,17 @@
                                     <label>Confirmar Senha</label>
                                 </div>
 
-                            <div class="rkmd-checkbox checkbox-rotate checkbox-ripple b-none m-b-20">
+                            <!-- <div class="rkmd-checkbox checkbox-rotate checkbox-ripple b-none m-b-20">
                                 <label class="input-checkbox checkbox-primary">
                                     <input type="checkbox" id="checkbox">
                                     <span class="checkbox"></span>
                                 </label>
                                 <div class="captions">Lembrar de mim</div>
-                            </div>
+                            </div> -->
                             <div class="col-xs-10 offset-xs-1">
                                 <button type="submit" class="btn btn-primary btn-md btn-block waves-effect waves-light m-b-20">Cadastrar</button>
                             </div>
-                            <div class="row">
+                            <div class="rows">
                                 <div class="col-xs-12 text-center">
                                     <span class="text-muted">Já tem uma conta?</span>
                                     <a href="/login" class="f-w-600 p-l-5"> Entre Aqui</a>

@@ -2,7 +2,7 @@
     <div class="content">
         <div class="user-header">
             <div class="wrapper">
-                <img src="<?= "https://www.gravatar.com/avatar/" . md5(strtolower(Auth::user()->email)); ?>" />
+                <img src="<?= \App\User::find(Auth::user()->id)->getAvatar(); ?>" />
                 <span class="username"><?= Auth::user()->name; ?></span>
                 <i class="fa fa-chevron-down"></i>
             </div>
@@ -15,7 +15,10 @@
                 </li>
                 <li class="separator"></li>
                 <li>
-                    <a href="/logout">Sair</a>
+                    <form action="/logout" method="POST">
+                        @csrf
+                        <button>Sair</button>
+                    </form>
                 </li>
             </ul>
         </div>
@@ -30,7 +33,7 @@
                     <h3>Grupos ativos</h3>
                     <ul class="list-groups">
                         <?php foreach ($recently_groups as $key => $group) { ?>
-                            <li>
+                            <li data-group-id="<?= $group["id"]; ?>">
                                 <a href="/chat/group/<?= $group["id"]; ?>">
                                     <img src="" />
                                     <span><?= $group["name"]; ?></span>
@@ -54,7 +57,7 @@
                         <?php foreach ($recently_chats as $key => $rc) { ?>
                             <li data-user-id="<?= $rc->id; ?>">
                                 <a href="/chat/private/<?= ChatCodify::crypt($rc->id); ?>">
-                                    <img src="<?= "https://www.gravatar.com/avatar/" . md5(strtolower($rc->email)); ?>" />
+                                    <img src="<?= $rc->getAvatar(); ?>" />
                                     <span><?= $rc->name; ?></span>
                                 </a>
                                 <?php

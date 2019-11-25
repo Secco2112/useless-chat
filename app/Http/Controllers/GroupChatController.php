@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \App\GroupChat;
 use \App\GroupChatMessages;
+use \App\GroupChatUsers;
 use MessageDelete;
+use Auth;
+use \App\User;
 
 class GroupChatController extends Controller
 {
@@ -20,18 +23,23 @@ class GroupChatController extends Controller
         $delete_handler = new MessageDelete();
         $delete_handler->init();
 
+        // Verifica se o grupo está disponível
+        $check = GroupChatUsers::where([
+            ["group_id", "=", $id],
+            ["user_id", "=", Auth::user()->id]
+        ])->count();
+
+        if($check == 0) {
+            abort(404,'Page not found.');
+        }
+
         $receivers = [];
         $users = GroupChat::find($id)->users();
-        $receivers = array_map(function($u) {
-            return $u["id"];
-        }, $users);
-
-        $group_name = "";
         foreach ($users as $key => $user) {
-            if(count($users) - 1 == $key) $group_name .= " e " . $user["name"];
-            else if($key == 0) $group_name .= $user["name"];
-            else $group_name .= ", " . $user["name"];
+            $receivers[] = $user["id"];
         }
+
+        $group_name = GroupChat::find($id)->name();
 
         $data = GroupChatMessages::where("group_id", $id)->orderBy("created_at", "ASC")->get();
 
@@ -146,6 +154,51 @@ class GroupChatController extends Controller
         $data->content = $message;
         $data->save();
 
+        die();
+    }
+
+    public function search() {
+        $query = $_POST["query"];
+        $group_id = $_POST["group_id"];
+
+        $current_user = Auth::user();
+
+        $results = \App\User::where("name", "like", "%" . $query . "%")->where("id", "!=", Auth::user()->id)->get();
+
+        $users = [];
+        foreach ($results as $key => $result) {
+            if($current_user->isFriendOf($result->id)) {
+                $user = [];
+                $user["id"] = $result->id;
+                $user["name"] = $result->name;
+                $user["avatar"] = $result->getAvatar();
+
+                $data = GroupChatUsers::where([
+                    ["group_id", "=", $group_id],
+                    ["user_id", "=", $result->id]
+                ])->count();
+
+                $user["in_group"] = $data > 0;
+
+                $users[] = $user;
+            }
+        }
+
+        return $users;
+    }
+
+    public function add_user() {
+        $user_id = $_POST["id"];
+        $group_id = $_POST["group_id"];
+
+        $add = new GroupChatUsers();
+        $add->group_id = $group_id;
+        $add->user_id = $user_id;
+        $add->save();
+
+        $group_name = GroupChat::find($group_id)->name();
+
+        echo json_encode(array("name" => $group_name));
         die();
     }
 }

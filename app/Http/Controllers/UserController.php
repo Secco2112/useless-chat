@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use \App\ProfileAvatar;
 use Illuminate\Support\Facades\Storage;
+use \App\GroupChat;
 
 class UserController extends Controller
 {
@@ -130,7 +131,7 @@ class UserController extends Controller
 
             $user = \App\User::find($user_id);
             $user = $user[0];
-            $user->image = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($user->email))) . "?s=200";
+            $user->image = $user->getAvatar();
 
             echo json_encode($user);
             die();
@@ -195,15 +196,8 @@ class UserController extends Controller
                 $common_groups = [];
                 foreach ($common_groups_ids as $key => $cg) {
                     $group = \App\GroupChat::find($cg)->toArray();
-                    $group_users = \App\GroupChatUsers::where("group_id", $cg)->get();
 
-                    $group_name = "";
-                    foreach ($group_users as $key => $_user) {
-                        $u = \App\User::find($_user->user_id)->toArray();
-                        if(count($group_users) - 1 == $key) $group_name .= " e " . $u["name"];
-                        else if($key == 0) $group_name .= $u["name"];
-                        else $group_name .= ", " . $u["name"];
-                    }
+                    $group_name = GroupChat::find($cg)->name(25);
 
                     $common_groups[] = [
                         "id" => $group["id"],

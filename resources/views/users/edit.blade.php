@@ -10,7 +10,7 @@
                         <div class="form-wrapper">
                             <form id="edit-user-form" action="/profile/edit" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <div class="row">
+                                <div class="row" style="flex-wrap: initial;">
                                     <div class="form-group avatar">
                                         <img class="profile-avatar" src="<?= $avatar; ?>" />
                                         <div class="custom-file">
@@ -41,6 +41,7 @@
                                             <label>Tempo para deletar: </label>
                                             <input <?= $accept_delete? "": "disabled"; ?> type="number" name="time-to-delete" value="<?= $delete_time; ?>" class="form-control<?= $accept_delete? "": " disabled" ?>" />
                                             <select <?= $accept_delete? "": "disabled"; ?> class="form-control" name="delete-type">
+                                                <option <?= $delete_type == "minutes"? "selected": ""; ?> value="minutes">Minutos</option>
                                                 <option <?= $delete_type == "" || $delete_type == "hours"? "selected": ""; ?> value="hours">Horas</option>
                                                 <option <?= $delete_type == "days"? "selected": ""; ?> value="days">Dias</option>
                                             </select>

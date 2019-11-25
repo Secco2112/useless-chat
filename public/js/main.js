@@ -186,6 +186,24 @@ class UselessChatWebsocket{
                         }
                     });
                 }
+            } else if(data.type == "add_to_group") {
+                var parent_div_exists = $(".left-content .groups-wrapper").length > 0;
+                if(parent_div_exists > 0) {
+                    var parent = $(".left-content .groups-wrapper");
+                } else {
+                    var div = "<div class='groups-wrapper'><h3>Grupos ativos</h3><ul class='list-groups'></ul></div>";
+                    $(".left-content .user-header").after(div);
+                    var parent = $(document).find(".left-content .groups-wrapper");
+                }
+
+                var html = "<li data-group-id='" + data.group_id + "'>";
+                        html += "<a href='/chat/group/" + data.group_id + "'>";
+                            html += "<img src='" + data.group_name.identicon() + "' />";
+                            html += "<span>" + data.group_name + "</span>";
+                        html += "</a>";
+                    html += "</li>";
+                
+                $(parent).find("ul").append(html);
             }
         };
     }
@@ -271,10 +289,14 @@ $(document).ready(function() {
     remove_friend();
 
     accept_friend_request();
+    reject_friend_request();
 
     check_users_online();
 
     search_users();
+
+    modal_add_user_to_group();
+    add_user_to_group();
 
 
     if($(".list-groups li").length > 0) {
@@ -419,7 +441,6 @@ function handlePrivateMessages() {
 }
 
 
-
 function handleGroupMessages() {
     var userInfo = null,
         current_user_id = parseInt($("meta[name=current_user_id]").attr("content")),
@@ -483,19 +504,48 @@ function handleGroupMessages() {
 
 
 function appendMessage(current_user_id, sender, message) {
-    var last_message_box_sender_id = $(".list-messages .message-container").last().data("sender-id");
-    if(last_message_box_sender_id == current_user_id) {
-        var html = "<div>";
-                html += "<div class='content'>";
-                    html += "<div class='wrapper'>";
-                        html += "<div class='markup'>" + message + "</div>";
+    if($(".list-messages .message-container").length > 0) {
+        var last_message_box_sender_id = $(".list-messages .message-container").last().data("sender-id");
+        if(last_message_box_sender_id == current_user_id) {
+            var html = "<div>";
+                    html += "<div class='content'>";
+                        html += "<div class='wrapper'>";
+                            html += "<div class='markup'>" + message + "</div>";
+                        html += "</div>";
                     html += "</div>";
                 html += "</div>";
+
+            $(html).insertAfter($(".list-messages .message-container > div").last());
+
+            $(".list-messages").scroolToBottom();
+        } else {
+            var today = new Date();
+            var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+
+            var html = "<div class='message-container' data-sender-id='" + current_user_id + "'>";
+                html += "<div>";
+                    html += "<div class='header'>";
+                        html += "<div class='avatar'>";
+                            html += "<img src='" + sender.image + "' />";
+                        html += "</div>";
+                        html += "<h2 class='meta-info'>";
+                            html += "<span id='username'>" + sender.name + "</span>";
+                            html += "<time>" + date + "</time>";
+                        html += "</h2>";
+                    html += "</div>";
+                    html += "<div class='content'>";
+                        html += "<div class='wrapper'>";
+                            html += "<div class='markup'>" + message + "</div>";
+                        html += "</div>";
+                    html += "</div>";
+                html += "</div>";
+                html += "<hr class='divider' />";
             html += "</div>";
 
-        $(html).insertAfter($(".list-messages .message-container > div").last());
+            $(html).insertAfter($(".list-messages .message-container").last());
 
-        $(".list-messages").scroolToBottom();
+            $(".list-messages").scroolToBottom();
+        }
     } else {
         var today = new Date();
         var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
@@ -517,10 +567,10 @@ function appendMessage(current_user_id, sender, message) {
                     html += "</div>";
                 html += "</div>";
             html += "</div>";
+            html += "<hr class='divider' />";
         html += "</div>";
 
-        $(html).insertAfter($(".list-messages .message-container").last());
-
+        $(".list-messages").append(html);
         $(".list-messages").scroolToBottom();
     }
 }
@@ -749,11 +799,11 @@ function remove_friend() {
             },
             success: function(data) {
                 if(data) {
-                    $(self).text("Adicionar como amigo").removeClass("btn-danger").addClass("btn-success").addClass("add-friend-panel");
+                    // $(self).text("Adicionar como amigo").removeClass("btn-danger").addClass("btn-success").addClass("add-friend-panel");
 
                     // Envia informação para o outro usuário via socket
                     var body = {
-                        type: "remove_friend",
+                        type: "remove_friend_list",
                         request_user: current_user_id,
                         user_to_add: user_to_add_id
                     };
@@ -774,30 +824,64 @@ function accept_friend_request() {
             current_user_id = $("meta[name=current_user_id]").attr("content"),
             user_to_accept = $(this).closest("li").data("user-id");
 
-            $.ajax({
-                url: '/user/accept_friendship_request',
-                type: 'POST',
-                dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: ({
+        $.ajax({
+            url: '/user/accept_friendship_request',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: ({
+                request_user: user_to_accept,
+                user_to_add: current_user_id
+            }),
+            success: function(data) {
+                // Envia ao usuário que enviou a solicitação via socket
+                var body = {
+                    type: "accept_friend_request",
                     request_user: user_to_accept,
                     user_to_add: current_user_id
-                }),
-                success: function(data) {
-                    // Envia ao usuário que enviou a solicitação via socket
-                    var body = {
-                        type: "accept_friend_request",
-                        request_user: user_to_accept,
-                        user_to_add: current_user_id
-                    };
+                };
 
-                    socket.sendMessage(JSON.stringify(body));
+                socket.sendMessage(JSON.stringify(body));
 
-                    window.location.reload(1);
-                }
-            });
+                window.location.reload(1);
+            }
+        });
+    });
+}
+
+
+function reject_friend_request() {
+    $(document).on("click", ".reject-friend-request", function() {
+        var self = this,
+            current_user_id = $("meta[name=current_user_id]").attr("content"),
+            user_request = $(this).closest("li").data("user-id");
+
+        $.ajax({
+            url: '/user/reject_friend_request',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: ({
+                request_user: user_request,
+                user_to_add: current_user_id
+            }),
+            success: function(data) {
+                // Envia ao usuário que enviou a solicitação via socket
+                var body = {
+                    type: "reject_friend_request",
+                    request_user: user_request,
+                    user_to_add: current_user_id
+                };
+
+                socket.sendMessage(JSON.stringify(body));
+
+                window.location.reload(1);
+            }
+        });
     });
 }
 
@@ -884,5 +968,102 @@ function search_users() {
                 }
             });
         }
+    });
+}
+
+
+function modal_add_user_to_group() {
+    $(".header .add-user").on("click", function() {
+        $("#group-add-user").modal();
+    });
+
+
+    $("#search-user-to-add").on("submit", function(e) {
+        e.preventDefault();
+
+        var query = $(this).find("input[name=username-input]").val(),
+            group_id = $(this).closest("form").find("input[name=group_id]").val(),
+            self = this;
+
+        $.ajax({
+            url: '/chat/group/search',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: ({
+                query: query,
+                group_id: group_id
+            }),
+            beforeSend: function() {
+                $(".wrap-list-users-to-add").removeClass("show");
+            },
+            success: function(data) {
+                if(data) {
+                    var users = data;
+
+                    $(".wrap-list-users-to-add ul").empty();
+
+                    $.each(users, function(i, user) {
+                        var html = '<li data-user-id="' + user.id + '">';
+                                html += '<div class="info">';
+                                    html += '<img class="avatar" src="' + user.avatar + '" />';
+                                    html += '<span>' + user.name + '</span>';
+                                html += '</div>';
+                                html + '<div class="options">';
+                                    if(user.in_group) {
+                                        html += '<span>O usuário já está no grupo.</span>'
+                                    } else {
+                                        html += '<button class="btn btn-success add-to-group">Adicionar</button>';
+                                    }
+                                html += '</div>';
+                            html += '</li>';
+
+                        $(".wrap-list-users-to-add ul").append(html);
+                    });
+
+                    $(".wrap-list-users-to-add").addClass("show");
+                }
+            }
+        });
+    });
+}
+
+
+function add_user_to_group() {
+    $(document).on("click", ".add-to-group", function() {
+        var self = this,
+            id = $(self).closest("li").data("user-id"),
+            group_id = $(this).closest(".content").find("form input[name=group_id]").val();
+
+        $.ajax({
+            url: '/chat/group/add_user',
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: ({
+                id: id,
+                group_id: group_id
+            }),
+            success: function(data) {
+                if(data) {
+                    $(self).replaceWith("<span>Usuário adicionado ao grupo</span>");
+                    $(".chat-content .header .info #username").text(data.name);
+                    $(".list-groups li[data-group-id='" + group_id + "'] a span").text(data.name);
+
+                    var body = {
+                        type: "add_to_group",
+                        user_id: id,
+                        group_id: group_id,
+                        group_name: data.name
+                    };
+                    
+                    socket.sendMessage(JSON.stringify(body));
+                }
+            }
+        });
     });
 }

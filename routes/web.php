@@ -11,13 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('users.friends');
-})->middleware('auth');
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes(['register' => true]);
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/user/info', 'UserController@info')->name('user.info');
 Route::post('/user/panel_info', 'UserController@panel_info')->name('user.panel_info');
@@ -32,6 +29,8 @@ Route::post('/chat/private/save', 'PrivateChatController@save')->name('chat.priv
 
 Route::get('/chat/group/{id}', 'GroupChatController@index')->name('chat.group')->middleware('auth');
 Route::post('/chat/group/save', 'GroupChatController@save')->name('chat.group_save')->middleware('auth');
+Route::post('/chat/group/search', 'GroupChatController@search')->name('chat.group.search')->middleware('auth');
+Route::post('/chat/group/add_user', 'GroupChatController@add_user')->name('chat.group.add_user')->middleware('auth');
 
 Route::get('/profile/edit', 'UserController@edit')->name('user.edit')->middleware('auth');
 Route::get('/profile/friends', 'UserController@friends')->name('user.friends')->middleware('auth');

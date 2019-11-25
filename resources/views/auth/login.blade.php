@@ -20,7 +20,7 @@
                                 <input name="password" type="password" class="md-form-control" autocomplete="off" required />
                                 <label><?= trans("login.form_pass"); ?></label>
                             </div>
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-sm-6 col-xs-12">
                                     <div class="rkmd-checkbox checkbox-rotate checkbox-ripple m-b-25">
                                         <label class="input-checkbox checkbox-primary">
@@ -30,8 +30,8 @@
                                         <div class="captions"><?= trans('login.form_remember'); ?></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
+                            </div> -->
+                            <div class="row login-button">
                                 <div class="col-xs-10 offset-xs-1">
                                     <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">LOGIN</button>
                                 </div>

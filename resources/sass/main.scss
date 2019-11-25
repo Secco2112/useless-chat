@@ -86,7 +86,7 @@ body{
 							-ms-transition: 0.3s all ease-in-out;
 							-o-transition: 0.3s all ease-in-out;
 							transition: 0.3s all ease-in-out;
-							a{
+							a, button{
 								display: block;
 								padding: 10px 20px;
 								clear: both;
@@ -95,6 +95,9 @@ body{
 								color: #333333;
 								white-space: nowrap;
 								font-size: 14px;
+								-webkit-appearance: none;
+								border: none;
+								background: transparent;
 							}
 							&:hover{
 								background-color: #efeeee;
@@ -179,7 +182,7 @@ body{
             height: 100%;
             .chat-content{
                 height: 100%;
-                .header{
+                > .header{
                     background-color: #36393f;
                     position: relative;
                     display: -webkit-box;
@@ -198,16 +201,27 @@ body{
                     overflow: hidden;
                     font-size: 16px;
                     line-height: 20px;
-                    cursor: default;
-                    z-index: 2;
-                    #at{
-                        color: #72767d;
-                    }
-                    #username{
-                        color: #fff;
-                        padding-left: 5px;
-                        font-weight: 600;
-                    }
+					cursor: default;
+					z-index: 2;
+					justify-content: space-between;
+                    .info{
+						#at{
+							color: #72767d;
+						}
+						#username{
+							color: #fff;
+							padding-left: 5px;
+							font-weight: 600;
+						}
+					}
+					.add-user{
+						margin-right: 30px;
+						i{
+							color: white;
+							cursor: pointer;
+							font-size: 22px;
+						}
+					}
                 }
                 .chat-messages{
                     background-color: #36393f;
@@ -662,6 +676,54 @@ body{
 						button{
 							margin-top: 13px;
 						}
+					}
+				}
+			}
+		}
+	}
+	#group-add-user{
+		.modal-header{
+			font-size: 18px;
+			font-weight: 600;
+		}
+		.modal-body{
+			.content{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				flex-direction: column;
+				.wrap-list-users-to-add{
+					opacity: 0;
+					visibility: hidden;
+					transition: .4s all ease-in-out;
+					width: 91%;
+					border-top: 1px solid #ececec;
+					ul{
+						li{
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
+							.info{
+								img{
+									width: 40px;
+								}
+								span{
+									padding-left: 15px;
+									font-weight: 600;
+									font-size: 16px;
+									letter-spacing: 0.5px;
+								}
+							}
+							.options{
+
+							}
+						}
+					}
+					&.show{
+						opacity: 1;
+						visibility: visible;
+						margin-top: 35px;
+						padding-top: 35px;
 					}
 				}
 			}
@@ -2014,6 +2076,7 @@ Basic card CSS
     margin-right: 5px; }
 
 .login-card {
+	margin: 0 auto;
   padding: 30px 20px;
   width: 500px;
   position: relative;
@@ -2038,7 +2101,18 @@ Basic card CSS
     font-size: 24px;
     line-height: 0.6; }
   .login-card .btn-forgot, .login-card .unlock {
-    text-align: center; }
+	text-align: center; }
+	.login-card{
+		form{
+			.login-button{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+	}
+	
+	
 
 .btn-signup .btn-md,
 .btn-singin1 .btn-md,
@@ -2571,7 +2645,8 @@ tr:first-child > td > .fc-day-grid-event {
   display: block;
   margin-bottom: 20px; }
   .md-input-wrapper > label {
-    text-transform: initial;
+	text-transform: initial;
+	text-align: left;
     color: #727272;
     position: absolute;
     top: 16px;
